@@ -38,6 +38,15 @@ resource "aws_instance" "web" {
   }
 
   key_name = "CI-CD"  # Ensure you have a key pair created in AWS
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo apt update",
+      "sudo apt install -y docker.io",
+      "sudo systemctl start docker",
+      "sudo systemctl enable docker"
+    ]
+  }
 }
 
 output "instance_public_dns" {
