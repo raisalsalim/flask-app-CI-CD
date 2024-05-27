@@ -32,12 +32,18 @@ resource "aws_instance" "web" {
   ami           = "ami-0f58b397bc5c1f2e8"  # Update with the latest Ubuntu AMI ID for your region
   instance_type = "t2.micro"
   security_groups = [aws_security_group.allow_web.name]
-  
+
   tags = {
     Name = "flask-app-instance"
   }
 
   key_name = "CI-CD"  # Ensure you have a key pair created in AWS
+  connection {
+    type        = "ssh"
+    user        = "ubuntu"  # User for connecting to the EC2 instance
+    private_key = file("/home/raisal/Downloads/CI-CD.pem")  # Path to your SSH private key file
+    host        = self.public_ip  # Use self.public_ip to dynamically fetch the public IP of the>
+  }
 
   provisioner "remote-exec" {
     inline = [
